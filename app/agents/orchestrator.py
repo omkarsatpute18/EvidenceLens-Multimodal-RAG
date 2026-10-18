@@ -36,5 +36,10 @@ class OrchestratorAgent:
         for item in evidence:
             by_type[item.content_type.value] = by_type.get(item.content_type.value, 0) + 1
         counts = ", ".join(f"{count} {kind}" for kind, count in sorted(by_type.items())) or "no matching evidence"
-        events.append(WorkflowEvent(label="Selective retrieval completed", detail=counts))
+        trace = self.retriever.last_trace
+        trace_detail = ""
+        if trace:
+            top_score = trace[0].get("fused_score", 0)
+            trace_detail = f"; hybrid rank fusion top score {top_score}"
+        events.append(WorkflowEvent(label="Selective retrieval completed", detail=counts + trace_detail))
         return plan, evidence, events

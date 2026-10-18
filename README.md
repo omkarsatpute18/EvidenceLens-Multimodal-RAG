@@ -21,6 +21,7 @@ Important decisions are rarely written in one paragraph. A report may explain a 
 - Provide a browser UI and JSON API with inspectable evidence cards and safe image previews.
 - Run locally with one test command and package with Docker.
 - Version 0.2 adds an optional OpenAI-compatible multimodal analyzer with bounded retries, timeouts, and deterministic fallback.
+- Version 0.3 adds deterministic hashed-vector similarity, lexical/vector rank fusion, metadata filters, retrieval traces, and context-aware contradiction checks for categories, units, and periods.
 
 Supported inputs: `.pdf`, `.txt`, `.md`, `.csv`, `.xlsx`, `.png`, `.jpg`, `.jpeg`.
 
@@ -128,7 +129,7 @@ python scripts/create_demo_chart.py
 python scripts/run_demo.py
 ```
 
-The test suite is fully offline and uses deterministic behavior; no paid model or API key is required. It covers file validation, text/table/image ingestion, provenance, retrieval, selective orchestration, contradiction handling, verification, and API behavior.
+The test suite is fully offline and uses deterministic behavior; no paid model or API key is required. It covers file validation, text/table/image ingestion, provenance, lexical/vector retrieval and filters, selective orchestration, provider fallback, context-aware contradiction handling, verification, safe assets, and API behavior.
 
 ## Evidence response shape
 
@@ -136,7 +137,7 @@ Every query returns `answer`, `key_findings`, `citations`, `evidence_items`, `co
 
 ## Limitations and future work
 
-The MVP does not yet digitize chart pixels or perform OCR; visual records are explicitly marked uncertain. Retrieval is lexical, not embedding-based. The optional provider adapter improves image descriptions but does not guarantee exact chart digitization. Authentication, per-user persistence, PDF rendering/highlights, audio/video, hosted deployment, and semantic vector retrieval remain future work.
+The MVP does not yet digitize chart pixels or perform OCR; visual records are explicitly marked uncertain. Version 0.3 uses dependency-free deterministic hashed vectors rather than a trained embedding model, so it is semantic-style local retrieval rather than frontier semantic search. The optional provider adapter improves image descriptions but does not guarantee exact chart digitization. Authentication, per-user persistence, PDF rendering/highlights, audio/video, hosted deployment, and trained embedding providers remain future work.
 
 ## Security considerations
 

@@ -88,3 +88,12 @@ def test_structured_subject_and_category_cues_are_normalized():
     assert len(findings) == 1
     assert "subject 'north'" in findings[0]
     assert "category 'decline'" in findings[0]
+
+
+def test_period_leading_clause_does_not_crash():
+    items = [
+        evidence("a", "In Q3 2026, North declined by 12%"),
+        evidence("b", "In Q3 2026, North declined by 3%"),
+    ]
+
+    assert detect_contradictions(items)

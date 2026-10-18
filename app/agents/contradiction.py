@@ -552,7 +552,15 @@ def _inferred_context(clause: str, match: re.Match[str]) -> _Context:
     if subject is None or category is None:
         for separator in (" for ", " of ", " in "):
             if separator in f" {cleaned.casefold()} ":
-                before, after = re.split(re.escape(separator), cleaned, maxsplit=1, flags=re.IGNORECASE)
+                parts = re.split(
+                    rf"\b{re.escape(separator.strip())}\b",
+                    cleaned,
+                    maxsplit=1,
+                    flags=re.IGNORECASE,
+                )
+                if len(parts) != 2:
+                    continue
+                before, after = parts
                 before_words = _meaningful_words(before)
                 after_words = _meaningful_words(after)
                 if before_words and after_words:

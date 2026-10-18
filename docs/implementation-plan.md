@@ -2,7 +2,11 @@
 
 ## Version 0.2 milestone
 
-Version 0.2 focuses on making visual analysis provider-aware without weakening the offline MVP. It adds an OpenAI-compatible adapter, bounded retries and timeouts, deterministic fallback, safe image asset previews, and a safer evidence-focused browser experience. Semantic retrieval and OCR remain later milestones.
+Version 0.2 focuses on making visual analysis provider-aware without weakening the offline MVP. It adds an OpenAI-compatible adapter, bounded retries and timeouts, deterministic fallback, safe image asset previews, and a safer evidence-focused browser experience.
+
+## Version 0.3 milestone
+
+Version 0.3 adds a deterministic local semantic-style signal to lexical retrieval, weighted rank fusion, metadata filters, retrieval score traces, and contextual numeric contradiction checks. It does not claim to replace a trained embedding model; the implementation remains offline and reproducible.
 
 ## User-visible outcome
 
@@ -18,11 +22,11 @@ A user uploads a mixed evidence bundle, asks a cross-modal question, and receive
 
 ## Architecture and data flow
 
-FastAPI serves the browser UI and JSON endpoints. The ingestion agent routes files to text, table, or image parsers. Parsers emit Pydantic `EvidenceItem` records. A deterministic local hybrid index ranks token overlap and filters by content type. The orchestrator plans modes, synthesis creates cited findings, contradiction checking compares numeric claims, verification checks support, and the formatter returns the final response.
+FastAPI serves the browser UI and JSON endpoints. The ingestion agent routes files to text, table, or image parsers. Parsers emit Pydantic `EvidenceItem` records. A deterministic local hybrid index fuses token overlap and hashed-vector cosine scores and filters by content type or metadata. The orchestrator plans modes, synthesis creates cited findings, contradiction checking compares contextual numeric claims, verification checks support, and the formatter returns the final response.
 
 ## Technology choices
 
-Python 3.11–3.13, FastAPI, Pydantic, PyMuPDF, openpyxl, Pillow, pytest, and a local lexical index. The model adapter is replaceable; mock mode is deterministic and offline-first.
+Python 3.11–3.13, FastAPI, Pydantic, PyMuPDF, openpyxl, Pillow, pytest, and a dependency-free local hybrid index. The model adapter is replaceable; mock mode is deterministic and offline-first.
 
 ## Test plan
 
@@ -34,4 +38,4 @@ Run directly with Uvicorn or with `docker compose up --build`. `/health` provide
 
 ## Risks and boundaries
 
-The MVP does not promise OCR or exact chart digitization, uses lexical rather than embedding retrieval, and has no authentication or tenant isolation. These are explicitly documented rather than hidden behind fabricated model output. PDF rendering, hosted providers, and audio/video are optional follow-ups.
+The MVP does not promise OCR or exact chart digitization, and Version 0.3's hashed vectors are not trained embeddings. The app also has no authentication or tenant isolation. These are explicitly documented rather than hidden behind fabricated model output. PDF rendering, hosted providers, and audio/video are optional follow-ups.

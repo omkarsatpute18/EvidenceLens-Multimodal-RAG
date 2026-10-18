@@ -53,3 +53,24 @@ def test_image_asset_is_available_without_exposing_a_filesystem_path():
 
 def test_invalid_query_is_rejected():
     assert client.post("/api/query", json={"question": "x"}).status_code == 422
+
+
+def test_unsafe_filename_is_reduced_to_a_basename():
+    response = client.post("/api/upload", files=[("files", ("../../private.txt", b"safe content", "text/plain"))])
+    assert response.status_code == 200
+    assert response.json()["files"] == ["private.txt"]
+    assert ".." not in response.json()["files"][0]
+
+
+def test_unsupported_file_is_reported_without_crashing():
+    response = client.post("/api/upload", files=[("files", ("payload.exe", b"not allowed", "application/octet-stream"))])
+    assert response.status_code == 200
+    assert response.json()["evidence_count"] == 0
+    assert any("Unsupported" in message for message in response.json()["errors"])
+
+
+def test_upload_size_limit_is_enforced_before_parsing(monkeypatch):
+    monkeypatch.setattr("app.main.settings.max_upload_mb", 1)
+    response = client.post("/api/upload", files=[("files", ("large.txt", b"x" * (1024 * 1024 + 1), "text/plain"))])
+    assert response.status_code == 413
+    assert "exceeds" in str(response.json()["detail"])

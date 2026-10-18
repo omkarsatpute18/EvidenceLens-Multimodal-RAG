@@ -28,10 +28,10 @@ flowchart TD
 - **Text extraction:** parses Markdown/TXT and PDF pages with stable IDs and page metadata.
 - **Table agent:** parses CSV/XLSX rows and retains sheet, row, column, and numeric text.
 - **Image/chart agent:** records dimensions and a conservative visual description. Version 0.2 can call an OpenAI-compatible multimodal endpoint and falls back deterministically on timeout, HTTP, configuration, or response errors; it does not fabricate exact OCR values.
-- **Retrieval:** deterministic token-overlap lexical ranking plus content-type filtering. The interface can be replaced by a vector store.
+- **Retrieval:** deterministic token-overlap ranking fused with a dependency-free hashed-token cosine signal, content-type and metadata filtering, stable tie-breaking, and inspectable score components. The interface can be replaced by a trained embedding/vector store.
 - **Orchestrator:** selects only text, table, image/chart, and comparison steps suggested by the query.
 - **Synthesis:** builds a response only from retrieved records and attaches citations.
-- **Contradiction:** flags differing numeric claims in retrieved evidence for review.
+- **Contradiction:** normalizes numeric claims by subject, category, unit, and period/date, then flags comparable mismatches while avoiding false conflicts between different categories, units, or time periods.
 - **Verification:** fails no-evidence and missing-citation responses, and lowers trust for uncertain visuals.
 
 ## Evidence and citation schema
@@ -48,4 +48,4 @@ The default mock mode is offline and requires no provider key. The FastAPI servi
 
 ## Known limitations
 
-The MVP's visual agent captures metadata and a conservative description rather than doing OCR or chart digitization. Retrieval is lexical rather than embedding-based. Persistent multi-user storage, authentication, PDF rendering, and audio/video are intentionally deferred.
+The MVP's visual agent captures metadata and a conservative description rather than doing OCR or chart digitization. Version 0.3's hashed vectors are deterministic semantic-style retrieval, not a trained embedding model. Persistent multi-user storage, authentication, PDF rendering, and audio/video are intentionally deferred.
