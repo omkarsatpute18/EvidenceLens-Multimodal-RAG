@@ -114,7 +114,7 @@ Open <http://localhost:8000>. Upload the files under `examples/demo_bundle/`, th
 
 The JSON endpoints are `GET /health`, `POST /api/upload`, `POST /api/query`, `GET /api/evidence`, `GET /api/evidence/{evidence_id}/asset`, and `POST /api/reset`.
 
-## Docker
+## Docker and deployment
 
 Docker is the recommended reproducible deployment path on a machine with Docker installed:
 
@@ -123,7 +123,17 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Then open <http://localhost:8000>. The image uses Python 3.11-slim, installs the pinned runtime requirements, and has a health check. Persistent data is mounted at the `evidencelens-data` volume. A live hosted deployment is not claimed by this repository; it requires an account, registry, and provider credentials.
+Then open <http://localhost:8000>. The image uses Python 3.11-slim, installs the pinned runtime requirements plus optional Tesseract, honors the platform-provided `PORT`, and has a health check. Persistent data is mounted at the `evidencelens-data` volume.
+
+### Render deployment blueprint
+
+`render.yaml` is a deployment-ready Render blueprint. To use it, connect the authorized public repository to Render, choose **Blueprint**, and apply the blueprint. The default deployment runs in safe mock mode and does not need a secret. To use a model provider, add `MODEL_PROVIDER`, `MODEL_NAME`, `MODEL_BASE_URL`, and `MODEL_API_KEY` as Render environment variables in the dashboard; never put the key in `render.yaml` or Git.
+
+The current store is in-memory and the free Render service has ephemeral local storage. Treat the hosted deployment as a demo instance until authentication, per-user storage, and durable persistence are added. The production start command is the Docker command in `Dockerfile`, and the platform health check is `/health`.
+
+### Live deployment status
+
+No live hosted URL is claimed yet. Docker is not installed in the development environment, so a Docker build and Render deployment still require manual execution on an authorized machine.
 
 ## Tests and demo
 
@@ -149,7 +159,7 @@ Never commit `.env`, API keys, private uploads, or local databases. Filenames ar
 
 ## Evaluation and demo
 
-The public-safe synthetic bundle in `examples/demo_bundle/` intentionally demonstrates a cross-modal comparison and an uncertain chart interpretation. See [docs/evaluation.md](docs/evaluation.md), [docs/architecture.md](docs/architecture.md), and [docs/demo-script.md](docs/demo-script.md).
+The public-safe synthetic bundle in `examples/demo_bundle/` intentionally demonstrates a cross-modal comparison and an uncertain chart interpretation. See [docs/evaluation.md](docs/evaluation.md), [docs/architecture.md](docs/architecture.md), [docs/demo-script.md](docs/demo-script.md), and [docs/video-production.md](docs/video-production.md). No video file is committed; the video must be recorded and uploaded as a separate submission asset.
 
 ## Project structure
 

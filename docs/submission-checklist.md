@@ -12,7 +12,9 @@ This checklist separates work completed locally from actions that require extern
 - [x] Synthetic public-safe demo bundle
 - [x] README, architecture, evaluation, and demo script
 - [x] `.env.example`, pinned requirements, Dockerfile, and Compose file
+- [x] Platform `PORT` support and Render deployment blueprint
 - [x] Local health endpoint and browser UI
+- [x] Demo script and recording guide
 
 ## Still requires manual execution
 

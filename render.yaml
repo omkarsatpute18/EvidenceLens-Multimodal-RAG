@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: evidencelens
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: MODEL_PROVIDER
+        value: mock
+      - key: MOCK_MODE
+        value: "true"
+      - key: OCR_ENABLED
+        value: "true"
+      - key: MAX_UPLOAD_MB
+        value: "25"
+      - key: TOP_K
+        value: "8"
