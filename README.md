@@ -8,7 +8,7 @@ EvidenceLens is an open-source multimodal RAG MVP for analysts, researchers, stu
 
 Important decisions are rarely written in one paragraph. A report may explain a trend, a spreadsheet may contain the exact row, and a chart may reveal whether the visual agrees. EvidenceLens keeps those modalities distinct while making them retrievable together. If visual evidence is ambiguous, the system says so instead of inventing a precise value.
 
-## MVP features
+## MVP and Version 0.2 features
 
 - Upload multiple PDF, TXT, Markdown, CSV, XLSX, PNG, and JPG files.
 - Preserve page, sheet, row, column, source, and image metadata.
@@ -18,8 +18,9 @@ Important decisions are rarely written in one paragraph. A report may explain a 
 - Detect possible conflicting numeric claims and surface uncertainty.
 - Verify no-evidence and missing-citation cases.
 - Use a safe, offline mock mode for tests and demos; provider settings are environment-based.
-- Provide a browser UI and JSON API.
+- Provide a browser UI and JSON API with inspectable evidence cards and safe image previews.
 - Run locally with one test command and package with Docker.
+- Version 0.2 adds an optional OpenAI-compatible multimodal analyzer with bounded retries, timeouts, and deterministic fallback.
 
 Supported inputs: `.pdf`, `.txt`, `.md`, `.csv`, `.xlsx`, `.png`, `.jpg`, `.jpeg`.
 
@@ -85,7 +86,12 @@ Copy `.env.example` to `.env` when using Docker or a model-backed adapter. Mock 
 | `EMBEDDING_MODEL` | Embedding adapter name | `local-token-overlap` |
 | `MAX_UPLOAD_MB` | Per-file size limit | `25` |
 | `TOP_K` | Retrieved evidence limit | `8` |
+| `MODEL_TIMEOUT_SECONDS` | Per-attempt multimodal request timeout | `20` |
+| `MODEL_RETRIES` | Bounded provider retry count | `2` |
+| `MODEL_MAX_OUTPUT_CHARS` | Maximum stored visual description length | `2000` |
 | `MOCK_MODE` | Offline deterministic behavior | `true` |
+
+To enable the optional provider adapter, set `MOCK_MODE=false`, choose `MODEL_PROVIDER=openai_compatible`, and configure `MODEL_BASE_URL`, `MODEL_NAME`, and (when required) `MODEL_API_KEY`. The adapter sends only the image bytes and a conservative analysis instruction to `/chat/completions`. Provider failures never expose raw response bodies or keys; ingestion falls back to deterministic visual evidence.
 
 ## Run locally
 
@@ -101,7 +107,7 @@ Open <http://localhost:8000>. Upload the files under `examples/demo_bundle/`, th
 - What information is missing?
 - Are any sources inconsistent?
 
-The JSON endpoints are `GET /health`, `POST /api/upload`, `POST /api/query`, `GET /api/evidence`, and `POST /api/reset`.
+The JSON endpoints are `GET /health`, `POST /api/upload`, `POST /api/query`, `GET /api/evidence`, `GET /api/evidence/{evidence_id}/asset`, and `POST /api/reset`.
 
 ## Docker
 
@@ -130,7 +136,7 @@ Every query returns `answer`, `key_findings`, `citations`, `evidence_items`, `co
 
 ## Limitations and future work
 
-The MVP does not yet digitize chart pixels or perform OCR; visual records are explicitly marked uncertain. Retrieval is lexical, not embedding-based. Authentication, per-user persistence, PDF rendering/highlights, audio/video, hosted deployment, and model-backed multimodal descriptions are planned follow-ups, not implied capabilities.
+The MVP does not yet digitize chart pixels or perform OCR; visual records are explicitly marked uncertain. Retrieval is lexical, not embedding-based. The optional provider adapter improves image descriptions but does not guarantee exact chart digitization. Authentication, per-user persistence, PDF rendering/highlights, audio/video, hosted deployment, and semantic vector retrieval remain future work.
 
 ## Security considerations
 

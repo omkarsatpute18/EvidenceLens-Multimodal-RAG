@@ -1,5 +1,9 @@
 # Implementation plan
 
+## Version 0.2 milestone
+
+Version 0.2 focuses on making visual analysis provider-aware without weakening the offline MVP. It adds an OpenAI-compatible adapter, bounded retries and timeouts, deterministic fallback, safe image asset previews, and a safer evidence-focused browser experience. Semantic retrieval and OCR remain later milestones.
+
 ## User-visible outcome
 
 A user uploads a mixed evidence bundle, asks a cross-modal question, and receives a cited answer with confidence, contradiction warnings, inspectable evidence, and a high-level workflow trace.

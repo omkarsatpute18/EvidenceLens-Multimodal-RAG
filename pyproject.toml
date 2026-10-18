@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "evidencelens"
-version = "0.1.0"
+version = "0.2.0"
 description = "Inspectable multimodal evidence intelligence for documents, tables, and images."
 readme = "README.md"
 requires-python = ">=3.11,<3.14"

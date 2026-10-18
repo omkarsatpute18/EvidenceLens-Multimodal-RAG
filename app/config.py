@@ -14,6 +14,9 @@ class Settings(BaseModel):
     vector_store_path: Path = Path("data/evidence.json")
     max_upload_mb: int = Field(default=25, ge=1, le=500)
     top_k: int = Field(default=8, ge=1, le=50)
+    model_timeout_seconds: float = Field(default=20.0, gt=0, le=120)
+    model_retries: int = Field(default=2, ge=0, le=5)
+    model_max_output_chars: int = Field(default=2000, ge=200, le=10000)
     mock_mode: bool = True
 
     @classmethod
@@ -27,6 +30,9 @@ class Settings(BaseModel):
             vector_store_path=Path(os.getenv("VECTOR_STORE_PATH", "data/evidence.json")),
             max_upload_mb=int(os.getenv("MAX_UPLOAD_MB", "25")),
             top_k=int(os.getenv("TOP_K", "8")),
+            model_timeout_seconds=float(os.getenv("MODEL_TIMEOUT_SECONDS", "20")),
+            model_retries=int(os.getenv("MODEL_RETRIES", "2")),
+            model_max_output_chars=int(os.getenv("MODEL_MAX_OUTPUT_CHARS", "2000")),
             mock_mode=os.getenv("MOCK_MODE", "true").lower() in {"1", "true", "yes"},
         )
 

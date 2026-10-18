@@ -2,7 +2,7 @@
 
 ## Overview
 
-EvidenceLens normalizes heterogeneous uploads into provenance-preserving `EvidenceItem` records. A selective orchestrator plans retrieval modes from the question, combines lexical and metadata-filtered retrieval, synthesizes a cited response, checks numeric consistency, and verifies that evidence exists before formatting the answer.
+EvidenceLens normalizes heterogeneous uploads into provenance-preserving `EvidenceItem` records. A selective orchestrator plans retrieval modes from the question, combines lexical and metadata-filtered retrieval, optionally sends images to an OpenAI-compatible analyzer, synthesizes a cited response, checks numeric consistency, and verifies that evidence exists before formatting the answer.
 
 ```mermaid
 flowchart TD
@@ -27,7 +27,7 @@ flowchart TD
 - **Ingestion:** validates file types, routes parsers, and records errors without aborting a bundle.
 - **Text extraction:** parses Markdown/TXT and PDF pages with stable IDs and page metadata.
 - **Table agent:** parses CSV/XLSX rows and retains sheet, row, column, and numeric text.
-- **Image/chart agent:** records dimensions and a conservative visual description; it does not fabricate exact OCR values.
+- **Image/chart agent:** records dimensions and a conservative visual description. Version 0.2 can call an OpenAI-compatible multimodal endpoint and falls back deterministically on timeout, HTTP, configuration, or response errors; it does not fabricate exact OCR values.
 - **Retrieval:** deterministic token-overlap lexical ranking plus content-type filtering. The interface can be replaced by a vector store.
 - **Orchestrator:** selects only text, table, image/chart, and comparison steps suggested by the query.
 - **Synthesis:** builds a response only from retrieved records and attaches citations.
@@ -40,11 +40,11 @@ flowchart TD
 
 ## Failure handling and security
 
-Uploads are copied to a temporary directory using a basename-only filename. Size and extension checks run before parsing. Individual parser failures are returned as errors while other files continue. Uploaded text is never treated as executable instructions; production model adapters should put it in a quoted evidence section. Secrets are environment-only and are not included in workflow events.
+Uploads are copied to a temporary directory using a basename-only filename and unique names for duplicate uploads. Size and extension checks run before parsing. Individual parser failures are returned as errors while other files continue. Uploaded text is never treated as executable instructions; the provider adapter separates a fixed system instruction from image evidence. Secrets are environment-only and are not included in workflow events. Image previews use generated evidence IDs rather than filesystem paths.
 
 ## Deployment and tests
 
-The default mock mode is offline and requires no provider key. The FastAPI service exposes `/health`, `/api/upload`, `/api/query`, `/api/evidence`, and `/api/reset`, plus a small browser UI at `/`. `pytest -q` covers ingestion, provenance, retrieval, selective routing, contradiction handling, and API behavior. Docker uses Python 3.11-slim and the pinned requirements file.
+The default mock mode is offline and requires no provider key. The FastAPI service exposes `/health`, `/api/upload`, `/api/query`, `/api/evidence`, `/api/evidence/{evidence_id}/asset`, and `/api/reset`, plus a browser UI at `/`. `pytest -q` covers ingestion, provenance, retrieval, selective routing, provider fallback, contradiction handling, safe assets, and API behavior. Docker uses Python 3.11-slim and the pinned requirements file.
 
 ## Known limitations
 

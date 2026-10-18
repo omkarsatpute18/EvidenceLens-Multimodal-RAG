@@ -28,3 +28,10 @@ def test_conflict_is_reported():
     store = EvidenceStore()
     store.ingest_files([("a.txt", b"North declined by 12%.") , ("b.txt", b"North declined by 3%.")])
     assert detect_contradictions(store.evidence())
+
+
+def test_duplicate_filenames_are_isolated(tmp_path):
+    store = EvidenceStore()
+    result = store.ingest_files([("../report.txt", b"first"), ("report.txt", b"second")])
+    assert result.files == ["report.txt", "report (2).txt"]
+    assert {item.source_file for item in store.evidence()} == {"report.txt", "report (2).txt"}
