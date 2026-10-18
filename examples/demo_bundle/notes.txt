@@ -1,0 +1,3 @@
+Demo source note: This synthetic bundle is public-safe and intentionally contains a cross-modal comparison. The chart image is illustrative and its values should be treated as uncertain unless they agree with the table.
+
+Example questions: Which region changed the most? Does the chart agree with the table? What evidence supports the conclusion? What information is missing? Are any sources inconsistent?
