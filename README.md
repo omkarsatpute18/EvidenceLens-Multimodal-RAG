@@ -22,6 +22,7 @@ Important decisions are rarely written in one paragraph. A report may explain a 
 - Run locally with one test command and package with Docker.
 - Version 0.2 adds an optional OpenAI-compatible multimodal analyzer with bounded retries, timeouts, and deterministic fallback.
 - Version 0.3 adds deterministic hashed-vector similarity, lexical/vector rank fusion, metadata filters, retrieval traces, and context-aware contradiction checks for categories, units, and periods.
+- Optional local OCR can be enabled with Tesseract; Docker installs the Tesseract binary, while local mock mode keeps OCR disabled by default.
 
 Supported inputs: `.pdf`, `.txt`, `.md`, `.csv`, `.xlsx`, `.png`, `.jpg`, `.jpeg`.
 
@@ -90,6 +91,9 @@ Copy `.env.example` to `.env` when using Docker or a model-backed adapter. Mock 
 | `MODEL_TIMEOUT_SECONDS` | Per-attempt multimodal request timeout | `20` |
 | `MODEL_RETRIES` | Bounded provider retry count | `2` |
 | `MODEL_MAX_OUTPUT_CHARS` | Maximum stored visual description length | `2000` |
+| `OCR_ENABLED` | Enable local Tesseract OCR | `false` |
+| `OCR_TIMEOUT_SECONDS` | Per-image OCR timeout | `10` |
+| `OCR_MAX_CHARS` | Maximum stored OCR text | `4000` |
 | `MOCK_MODE` | Offline deterministic behavior | `true` |
 
 To enable the optional provider adapter, set `MOCK_MODE=false`, choose `MODEL_PROVIDER=openai_compatible`, and configure `MODEL_BASE_URL`, `MODEL_NAME`, and (when required) `MODEL_API_KEY`. The adapter sends only the image bytes and a conservative analysis instruction to `/chat/completions`. Provider failures never expose raw response bodies or keys; ingestion falls back to deterministic visual evidence.
@@ -137,7 +141,7 @@ Every query returns `answer`, `key_findings`, `citations`, `evidence_items`, `co
 
 ## Limitations and future work
 
-The MVP does not yet digitize chart pixels or perform OCR; visual records are explicitly marked uncertain. Version 0.3 uses dependency-free deterministic hashed vectors rather than a trained embedding model, so it is semantic-style local retrieval rather than frontier semantic search. The optional provider adapter improves image descriptions but does not guarantee exact chart digitization. Authentication, per-user persistence, PDF rendering/highlights, audio/video, hosted deployment, and trained embedding providers remain future work.
+The MVP does not yet digitize chart pixels; visual records are explicitly marked uncertain. Optional Tesseract OCR can extract legible text but does not digitize chart geometry. Version 0.3 uses dependency-free deterministic hashed vectors rather than a trained embedding model, so it is semantic-style local retrieval rather than frontier semantic search. The optional provider adapter improves image descriptions but does not guarantee exact chart digitization. Authentication, per-user persistence, PDF rendering/highlights, audio/video, hosted deployment, and trained embedding providers remain future work.
 
 ## Security considerations
 

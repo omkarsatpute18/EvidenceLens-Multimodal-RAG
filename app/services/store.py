@@ -5,13 +5,19 @@ import mimetypes
 from app.agents.ingestion import IngestionResult, ingest_path
 from app.models import EvidenceItem
 from app.services.model import MockMultimodalAnalyzer, MultimodalAnalyzer
+from app.services.ocr import DisabledOCR, OCRExtractor
 from app.retrieval.index import HybridIndex
 
 
 class EvidenceStore:
-    def __init__(self, analyzer: MultimodalAnalyzer | None = None) -> None:
+    def __init__(
+        self,
+        analyzer: MultimodalAnalyzer | None = None,
+        ocr: OCRExtractor | None = None,
+    ) -> None:
         self.index = HybridIndex()
         self.analyzer = analyzer or MockMultimodalAnalyzer()
+        self.ocr = ocr or DisabledOCR()
         self.files: list[str] = []
         self.errors: list[str] = []
         self.assets: dict[str, tuple[bytes, str]] = {}
@@ -37,7 +43,7 @@ class EvidenceStore:
                 safe_name = self._unique_name(filename, set(self.files) | set(combined.files))
                 path = Path(directory) / f"{index:04d}_{safe_name}"
                 path.write_bytes(content)
-                result = ingest_path(path, self.analyzer)
+                result = ingest_path(path, self.analyzer, self.ocr)
                 combined.files.append(safe_name)
                 for item in result.evidence:
                     updated = item.model_copy(update={"source_file": safe_name})

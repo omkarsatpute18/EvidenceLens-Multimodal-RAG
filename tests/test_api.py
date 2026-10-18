@@ -11,7 +11,9 @@ def setup_function():
 
 
 def test_health_and_query_without_evidence():
-    assert client.get("/health").status_code == 200
+    health = client.get("/health")
+    assert health.status_code == 200
+    assert health.json()["ocr"] == "DisabledOCR"
     response = client.post("/api/query", json={"question": "What changed?"})
     assert response.status_code == 200
     assert response.json()["verification_status"] == "failed_no_evidence"

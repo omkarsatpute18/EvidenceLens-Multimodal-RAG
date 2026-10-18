@@ -6,6 +6,7 @@ from app.parsers.image import parse_image
 from app.parsers.table import parse_csv, parse_xlsx
 from app.parsers.text import parse_pdf, parse_text
 from app.services.model import MultimodalAnalyzer
+from app.services.ocr import OCRExtractor
 
 
 ALLOWED_EXTENSIONS = {".pdf", ".txt", ".md", ".csv", ".xlsx", ".png", ".jpg", ".jpeg"}
@@ -18,7 +19,11 @@ class IngestionResult:
     files: list[str] = field(default_factory=list)
 
 
-def ingest_path(path: Path, analyzer: MultimodalAnalyzer | None = None) -> IngestionResult:
+def ingest_path(
+    path: Path,
+    analyzer: MultimodalAnalyzer | None = None,
+    ocr: OCRExtractor | None = None,
+) -> IngestionResult:
     result = IngestionResult(files=[path.name])
     if path.suffix.lower() not in ALLOWED_EXTENSIONS:
         result.errors.append(f"Unsupported file type: {path.suffix or '[none]'}")
@@ -38,7 +43,7 @@ def ingest_path(path: Path, analyzer: MultimodalAnalyzer | None = None) -> Inges
             ".jpeg": parse_image,
         }[path.suffix.lower()]
         if path.suffix.lower() in {".png", ".jpg", ".jpeg"}:
-            result.evidence.extend(parse_image(path, analyzer))
+            result.evidence.extend(parse_image(path, analyzer, ocr))
         else:
             result.evidence.extend(parser(path))
         if not result.evidence:

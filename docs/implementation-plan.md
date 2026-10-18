@@ -6,7 +6,7 @@ Version 0.2 focuses on making visual analysis provider-aware without weakening t
 
 ## Version 0.3 milestone
 
-Version 0.3 adds a deterministic local semantic-style signal to lexical retrieval, weighted rank fusion, metadata filters, retrieval score traces, and contextual numeric contradiction checks. It does not claim to replace a trained embedding model; the implementation remains offline and reproducible.
+Version 0.3 adds a deterministic local semantic-style signal to lexical retrieval, weighted rank fusion, metadata filters, retrieval score traces, contextual numeric contradiction checks, and optional bounded local Tesseract OCR. It does not claim to replace a trained embedding model or a chart digitizer; the default implementation remains offline and reproducible.
 
 ## User-visible outcome
 
@@ -38,4 +38,4 @@ Run directly with Uvicorn or with `docker compose up --build`. `/health` provide
 
 ## Risks and boundaries
 
-The MVP does not promise OCR or exact chart digitization, and Version 0.3's hashed vectors are not trained embeddings. The app also has no authentication or tenant isolation. These are explicitly documented rather than hidden behind fabricated model output. PDF rendering, hosted providers, and audio/video are optional follow-ups.
+The MVP does not promise exact chart digitization, and Version 0.3's hashed vectors are not trained embeddings. OCR depends on an installed Tesseract binary and is disabled by default. The app also has no authentication or tenant isolation. These are explicitly documented rather than hidden behind fabricated model output. PDF rendering, hosted providers, and audio/video are optional follow-ups.

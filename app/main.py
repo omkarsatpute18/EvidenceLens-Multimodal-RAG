@@ -7,15 +7,17 @@ from app.agents.orchestrator import OrchestratorAgent
 from app.agents.retrieval import MultimodalRetrievalAgent
 from app.config import get_settings
 from app.services.model import build_multimodal_analyzer
+from app.services.ocr import build_ocr
 from app.services.store import EvidenceStore
 
 
 settings = get_settings()
 analyzer = build_multimodal_analyzer(settings)
-store = EvidenceStore(analyzer=analyzer)
+ocr = build_ocr(settings)
+store = EvidenceStore(analyzer=analyzer, ocr=ocr)
 orchestrator = OrchestratorAgent(MultimodalRetrievalAgent(store.index), top_k=settings.top_k)
 
-app = FastAPI(title="EvidenceLens", version="0.2.0", description="Inspectable multimodal evidence intelligence")
+app = FastAPI(title="EvidenceLens", version="0.3.0", description="Inspectable multimodal evidence intelligence")
 
 
 class QueryRequest(BaseModel):
@@ -31,6 +33,7 @@ def health() -> dict[str, object]:
         "evidence_count": len(store.evidence()),
         "mock_mode": settings.mock_mode,
         "analyzer": type(analyzer).__name__,
+        "ocr": type(ocr).__name__,
     }
 
 

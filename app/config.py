@@ -17,6 +17,9 @@ class Settings(BaseModel):
     model_timeout_seconds: float = Field(default=20.0, gt=0, le=120)
     model_retries: int = Field(default=2, ge=0, le=5)
     model_max_output_chars: int = Field(default=2000, ge=200, le=10000)
+    ocr_enabled: bool = False
+    ocr_timeout_seconds: float = Field(default=10.0, gt=0, le=60)
+    ocr_max_chars: int = Field(default=4000, ge=200, le=20000)
     mock_mode: bool = True
 
     @classmethod
@@ -33,6 +36,9 @@ class Settings(BaseModel):
             model_timeout_seconds=float(os.getenv("MODEL_TIMEOUT_SECONDS", "20")),
             model_retries=int(os.getenv("MODEL_RETRIES", "2")),
             model_max_output_chars=int(os.getenv("MODEL_MAX_OUTPUT_CHARS", "2000")),
+            ocr_enabled=os.getenv("OCR_ENABLED", "false").lower() in {"1", "true", "yes"},
+            ocr_timeout_seconds=float(os.getenv("OCR_TIMEOUT_SECONDS", "10")),
+            ocr_max_chars=int(os.getenv("OCR_MAX_CHARS", "4000")),
             mock_mode=os.getenv("MOCK_MODE", "true").lower() in {"1", "true", "yes"},
         )
 

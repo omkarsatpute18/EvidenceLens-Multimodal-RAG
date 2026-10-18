@@ -27,7 +27,7 @@ flowchart TD
 - **Ingestion:** validates file types, routes parsers, and records errors without aborting a bundle.
 - **Text extraction:** parses Markdown/TXT and PDF pages with stable IDs and page metadata.
 - **Table agent:** parses CSV/XLSX rows and retains sheet, row, column, and numeric text.
-- **Image/chart agent:** records dimensions and a conservative visual description. Version 0.2 can call an OpenAI-compatible multimodal endpoint and falls back deterministically on timeout, HTTP, configuration, or response errors; it does not fabricate exact OCR values.
+- **Image/chart agent:** records dimensions and a conservative visual description. Version 0.2 can call an OpenAI-compatible multimodal endpoint and falls back deterministically on timeout, HTTP, configuration, or response errors. Version 0.3 optionally runs bounded local Tesseract OCR and stores OCR text separately; it does not fabricate exact chart values.
 - **Retrieval:** deterministic token-overlap ranking fused with a dependency-free hashed-token cosine signal, content-type and metadata filtering, stable tie-breaking, and inspectable score components. The interface can be replaced by a trained embedding/vector store.
 - **Orchestrator:** selects only text, table, image/chart, and comparison steps suggested by the query.
 - **Synthesis:** builds a response only from retrieved records and attaches citations.
@@ -48,4 +48,4 @@ The default mock mode is offline and requires no provider key. The FastAPI servi
 
 ## Known limitations
 
-The MVP's visual agent captures metadata and a conservative description rather than doing OCR or chart digitization. Version 0.3's hashed vectors are deterministic semantic-style retrieval, not a trained embedding model. Persistent multi-user storage, authentication, PDF rendering, and audio/video are intentionally deferred.
+The MVP's visual agent captures metadata and a conservative description; optional Tesseract OCR extracts text but does not digitize chart geometry. Version 0.3's hashed vectors are deterministic semantic-style retrieval, not a trained embedding model. Persistent multi-user storage, authentication, PDF rendering, and audio/video are intentionally deferred.
