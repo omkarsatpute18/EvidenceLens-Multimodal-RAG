@@ -114,7 +114,7 @@ Open <http://localhost:8000>. Upload the files under `examples/demo_bundle/`, th
 
 The JSON endpoints are `GET /health`, `POST /api/upload`, `POST /api/query`, `GET /api/evidence`, `GET /api/evidence/{evidence_id}/asset`, and `POST /api/reset`.
 
-## Docker and deployment
+## Docker and Vercel deployment
 
 Docker is the recommended reproducible deployment path on a machine with Docker installed:
 
@@ -125,15 +125,21 @@ docker compose up --build
 
 Then open <http://localhost:8000>. The image uses Python 3.11-slim, installs the pinned runtime requirements plus optional Tesseract, honors the platform-provided `PORT`, and has a health check. Persistent data is mounted at the `evidencelens-data` volume.
 
-### Render deployment blueprint
+### Vercel deployment
 
-`render.yaml` is a deployment-ready Render blueprint. To use it, connect the authorized public repository to Render, choose **Blueprint**, and apply the blueprint. The default deployment runs in safe mock mode and does not need a secret. To use a model provider, add `MODEL_PROVIDER`, `MODEL_NAME`, `MODEL_BASE_URL`, and `MODEL_API_KEY` as Render environment variables in the dashboard; never put the key in `render.yaml` or Git.
+Vercel supports FastAPI through its Python runtime and treats `app/main.py` as a Vercel Function entrypoint. This repository includes `vercel.json`, `.vercelignore`, and `[tool.vercel]` configuration for that deployment path. Follow [docs/vercel-deployment.md](docs/vercel-deployment.md).
+
+Vercel deployments run with ephemeral function memory. The current in-memory evidence store is suitable for a single-user demo, but it is not durable multi-user storage. Keep `OCR_ENABLED=false` on Vercel because the platform does not install the Docker Tesseract package; use the configured multimodal provider for image understanding instead. Set `MAX_UPLOAD_MB=4` for the Vercel deployment to stay within small serverless request limits.
+
+### Render deployment blueprint (alternative)
+
+`render.yaml` remains an alternative Docker deployment blueprint. To use it, connect the authorized public repository to Render, choose **Blueprint**, and apply the blueprint. The default deployment runs in safe mock mode and does not need a secret. To use a model provider, add `MODEL_PROVIDER`, `MODEL_NAME`, `MODEL_BASE_URL`, and `MODEL_API_KEY` as Render environment variables in the dashboard; never put the key in `render.yaml` or Git.
 
 The current store is in-memory and the free Render service has ephemeral local storage. Treat the hosted deployment as a demo instance until authentication, per-user storage, and durable persistence are added. The production start command is the Docker command in `Dockerfile`, and the platform health check is `/health`.
 
 ### Live deployment status
 
-No live hosted URL is claimed yet. Docker is not installed in the development environment, so a Docker build and Render deployment still require manual execution on an authorized machine.
+No live hosted URL is claimed yet. A Vercel or Render deployment still requires manual execution in an authorized account.
 
 ## Tests and demo
 

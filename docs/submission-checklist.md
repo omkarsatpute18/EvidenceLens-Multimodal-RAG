@@ -13,6 +13,7 @@ This checklist separates work completed locally from actions that require extern
 - [x] README, architecture, evaluation, and demo script
 - [x] `.env.example`, pinned requirements, Dockerfile, and Compose file
 - [x] Platform `PORT` support and Render deployment blueprint
+- [x] Vercel FastAPI entrypoint, function config, and deployment guide
 - [x] Local health endpoint and browser UI
 - [x] Demo script and recording guide
 
@@ -23,7 +24,7 @@ This checklist separates work completed locally from actions that require extern
 - [ ] Capture screenshots from the browser UI
 - [ ] Record the 2–3 minute demo described in `docs/demo-script.md`
 - [ ] Create a public GitHub repository and push only after authorization
-- [ ] Choose and configure a hosting provider if a live deployment is required
+- [ ] Deploy to Vercel or another hosting provider and verify `/health`
 - [ ] Add the final repository, deployment, and video links to the submission form
 
 Do not claim a live deployment or provider-backed analysis unless it has been run and verified with the relevant credentials.

@@ -1,0 +1,10 @@
+.git
+.venv
+tests
+docs
+scripts
+examples
+.opencode
+data
+*.png
+*.jpg

@@ -29,3 +29,6 @@ addopts = "-q"
 
 [tool.setuptools.packages.find]
 include = ["app*"]
+
+[tool.vercel]
+entrypoint = "app.main:app"
