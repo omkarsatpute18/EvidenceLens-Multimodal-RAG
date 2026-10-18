@@ -3,6 +3,7 @@ from pathlib import Path
 from app.agents.ingestion import ingest_path
 from app.parsers.table import parse_csv
 from app.parsers.text import parse_text
+from app.parsers.image import parse_image
 
 
 def test_text_preserves_source_and_stable_ids(tmp_path: Path):
@@ -31,3 +32,35 @@ def test_unsupported_and_empty_files_fail_gracefully(tmp_path: Path):
     unsupported = tmp_path / "secret.exe"
     unsupported.write_bytes(b"data")
     assert "Unsupported" in ingest_path(unsupported).errors[0]
+
+
+def test_pdf_xlsx_and_image_preserve_modality_metadata(tmp_path: Path):
+    import fitz
+    import openpyxl
+    from PIL import Image
+
+    pdf = tmp_path / "report.pdf"
+    document = fitz.open()
+    page = document.new_page()
+    page.insert_text((72, 72), "North declined by 12%.")
+    document.save(pdf)
+    document.close()
+    pdf_items = ingest_path(pdf).evidence
+    assert pdf_items[0].page_number == 1
+
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = "Regions"
+    sheet.append(["Region", "Change"])
+    sheet.append(["North", -12])
+    xlsx = tmp_path / "regions.xlsx"
+    workbook.save(xlsx)
+    xlsx_items = ingest_path(xlsx).evidence
+    assert xlsx_items[0].sheet_name == "Regions"
+    assert xlsx_items[0].row_start == 2
+
+    image = tmp_path / "chart.png"
+    Image.new("RGB", (20, 10), "white").save(image)
+    visual = parse_image(image)[0]
+    assert visual.metadata["width"] == 20
+    assert visual.extraction_confidence < 0.6
