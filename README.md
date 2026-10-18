@@ -123,7 +123,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Then open <http://localhost:8000>. The image uses Python 3.11-slim, installs the pinned runtime requirements plus optional Tesseract, honors the platform-provided `PORT`, and has a health check. Persistent data is mounted at the `evidencelens-data` volume.
+Then open <http://localhost:8000>. The image uses Python 3.13-slim, installs the pinned runtime requirements plus optional Tesseract, honors the platform-provided `PORT`, and has a health check. Persistent data is mounted at the `evidencelens-data` volume.
 
 ### Vercel deployment
 

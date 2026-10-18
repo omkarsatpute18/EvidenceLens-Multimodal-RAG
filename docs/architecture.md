@@ -44,7 +44,7 @@ Uploads are copied to a temporary directory using a basename-only filename and u
 
 ## Deployment and tests
 
-The default mock mode is offline and requires no provider key. The FastAPI service exposes `/health`, `/api/upload`, `/api/query`, `/api/evidence`, `/api/evidence/{evidence_id}/asset`, and `/api/reset`, plus a browser UI at `/`. `pytest -q` covers ingestion, provenance, retrieval, selective routing, provider fallback, contradiction handling, safe assets, and API behavior. Docker uses Python 3.11-slim and the pinned requirements file.
+The default mock mode is offline and requires no provider key. The FastAPI service exposes `/health`, `/api/upload`, `/api/query`, `/api/evidence`, `/api/evidence/{evidence_id}/asset`, and `/api/reset`, plus a browser UI at `/`. `pytest -q` covers ingestion, provenance, retrieval, selective routing, provider fallback, contradiction handling, safe assets, and API behavior. Docker uses Python 3.13-slim and the pinned requirements file.
 
 ## Known limitations
 
