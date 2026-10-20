@@ -139,7 +139,15 @@ The current store is in-memory and the free Render service has ephemeral local s
 
 ### Live deployment status
 
-No live hosted URL is claimed yet. A Vercel or Render deployment still requires manual execution in an authorized account.
+The Vercel demo deployment is available at:
+
+<https://evidence-lens-multimodal-rag-drab.vercel.app/>
+
+Its health endpoint is:
+
+<https://evidence-lens-multimodal-rag-drab.vercel.app/health>
+
+The deployment was verified as version `0.3.0` in mock mode. The GitHub source repository is <https://github.com/omkarsatpute18/EvidenceLens-Multimodal-RAG>. This is a demo deployment using in-memory evidence storage; it is not yet a production multi-user deployment.
 
 ## Tests and demo
 

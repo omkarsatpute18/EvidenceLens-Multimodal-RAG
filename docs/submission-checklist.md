@@ -23,8 +23,16 @@ This checklist separates work completed locally from actions that require extern
 - [ ] Configure a provider key if demonstrating model-backed visual analysis
 - [ ] Capture screenshots from the browser UI
 - [ ] Record the 2–3 minute demo described in `docs/demo-script.md`
-- [ ] Create a public GitHub repository and push only after authorization
-- [ ] Deploy to Vercel or another hosting provider and verify `/health`
+- [x] Create a public GitHub repository and push only after authorization
+- [x] Deploy to Vercel and verify `/health`
 - [ ] Add the final repository, deployment, and video links to the submission form
+
+## Verified links
+
+- GitHub: <https://github.com/omkarsatpute18/EvidenceLens-Multimodal-RAG>
+- Vercel demo: <https://evidence-lens-multimodal-rag-drab.vercel.app/>
+- Vercel health: <https://evidence-lens-multimodal-rag-drab.vercel.app/health>
+
+The links above are available. The screenshot files and video link must be added after the person records or captures them; no video asset is being fabricated in the repository.
 
 Do not claim a live deployment or provider-backed analysis unless it has been run and verified with the relevant credentials.
